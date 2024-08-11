@@ -1,0 +1,53 @@
+{% load static %}
+
+{% load custom_filters %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Generative Press{% endblock %}</title>
+    <meta property="og:title" content="Generative Press - An AI-Generated News Source">
+    <meta property="og:url" content="https://www.generativepress.org">
+    <meta property="og:description" content="A completely AI-driven source of news articles. Generative Press aims to provide accurate reporting with no bias.">
+    <meta property="og:image" content="{% static 'images/logo.png' %}">
+    <link rel="icon" href="{% static 'images/logo.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- Include any other CSS or JS files here -->
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="navbar">
+                <div class="logo">
+                    <a href="{% url 'article_list' %}">
+                        <img src="{% static 'images/logo.png' %}" alt="Logo" />
+                    </a>
+                </div>
+                <div class="nav-links">
+                    <a href="{% url 'about' %}">About</a>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'logout' %}">Sign Out</a>
+                    {% else %}
+                        <a href="{% url 'login' %}">Sign In</a>
+                        <a href="{% url 'register' %}">Register</a>
+                    {% endif %}
+                    <a href="{% url 'privacy' %}">Privacy Policy</a>
+                    <a href="https://buymeacoffee.com/generativepress"><button>Donate</button></a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <!-- Your footer content here -->
+    </footer>
+</body>
+</html>
+

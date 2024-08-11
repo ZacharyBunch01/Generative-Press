@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}About Us{% endblock %}
+
+{% block content %}
+<h2>About</h2>
+
+<h3>About Us</h3>
+<p>Welcome to Generative Press! This site hosts national and international news (relative to the U.S.) that is entirely AI generated.
+This site utilizes the GNews and ChatGPT APIs to access, verify, and write informative news articles.</p>
+
+<h3>Our Mission</h3>
+<p>Our mission is to provide insightful, accurate, and non-biased news.</p>
+
+<h3>Contact Us</h3>
+<p>No contact info yet.</p>
+
+<p><a href="{% url 'article_list' %}"><button>Go Back</button></a></p>
+{% endblock %}
+

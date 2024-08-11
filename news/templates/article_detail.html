@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+{% block content %}
+    <article class="article-container">
+        <h1>{{ article.headline }}</h1>
+        <p class="publication-date"><strong>Published on:</strong> {{ article.created_at|date:"F j, Y" }}</p>
+        
+        {% if article.image %}
+            <div class="article-image">
+                <img src="{{ article.image }}" alt="{{ article.headline }}">
+            </div>
+        {% endif %}
+        
+        <div class="article-body">
+            {{ article.body_text|linebreaksbr|safe }}
+        </div>
+        
+        <p class="article-source">Source: <a href="{{ article.references }}" target="_blank">{{ article.references }}</a></p>
+        
+        <section class="comments-section">
+            <h2>Comments</h2>
+            <ul class="comments-list">
+                {% for comment in comments %}
+                    <li><strong>{{ comment.user.username }}:</strong> {{ comment.text }}</li>
+                {% empty %}
+                    <li>No comments yet.</li>
+                {% endfor %}
+            </ul>
+            
+            {% if user.is_authenticated %}
+                <div class="comment-form">
+                    <h3>Add a Comment</h3>
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit">Submit</button>
+                    </form>
+                </div>
+            {% else %}
+                <p>You need to be logged in to comment.</p>
+            {% endif %}
+        </section>
+        
+        <a href="{% url 'article_list' %}" class="back-link">Back to Article List</a>
+    </article>
+{% endblock %}
+
+
+
+

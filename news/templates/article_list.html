@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="article-list-container">
+        <h1>Article List</h1>
+        
+        <!-- Tabs for Filtering -->
+        <div class="tabs">
+            <button class="tab-link active" onclick="filterArticles('all')">All</button>
+            <button class="tab-link" onclick="filterArticles('national')">National</button>
+            <button class="tab-link" onclick="filterArticles('international')">International</button>
+            <button class="tab-link" onclick="filterArticles('science_technology')">Science & Technology</button>
+            <button class="tab-link" onclick="filterArticles('entertainment')">Entertainment</button>
+            <button class="tab-link" onclick="filterArticles('business')">Business</button>
+        </div>
+
+        <ul class="article-list">
+            {% for article in articles %}
+                <li class="article-item {{ article.category }}">
+                    {% if article.image %}
+                        <div class="article-image">
+                            <a href="{% url 'article_detail' article.pk %}"><img src="{{ article.image }}" alt="{{ article.headline }}"></a>
+                        </div>
+                    {% endif %}
+                    <div class="article-content">
+                        <a href="{% url 'article_detail' article.pk %}" class="article-title">{{ article.headline }}</a>
+                        <br>
+                        <small class="article-date">Published on: {{ article.created_at|date:"F j, Y" }}</small>
+                    </div>
+                </li>
+            {% empty %}
+                <li class="no-articles">No articles available.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+<script src="{% static 'js/tabs.js' %}"></script>
+{% endblock %}
