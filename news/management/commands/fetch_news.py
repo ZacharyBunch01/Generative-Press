@@ -5,22 +5,15 @@ from news.models import Article
 
 # Configuration
 GNEWS_API_KEY = 'key'
-OPENAI_API_KEY = 'key
+OPENAI_API_KEY = 'key'
 GNEWS_URL = 'https://gnews.io/api/v4/search'
 OPENAI_MODEL = 'gpt-4o'  # Update as needed
-NEWS_QUERY_PARAMS = {
-    'q': 'technology',  # Query term
-    'lang': 'en',
-    'country': 'us',
-    'max': 10,
-    'apikey': GNEWS_API_KEY
-}
 
 CATEGORY_KEYWORDS = {
     'national': ['country', 'state', 'local', 'national'],
     'international': ['global', 'international', 'world'],
     'science_technology': ['technology', 'science', 'innovation', 'research'],
-    'entertainment': ['celebrity', 'film', 'music', 'tv'],
+    'entertainment': ['celebrity', 'film', 'music', 'tv', 'movie', 'theater', 'cinema', 'trailer', 'incredibles'],
     'business': ['economy', 'business', 'finance', 'market']
 }
 
@@ -29,11 +22,21 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.stdout.write('Fetching news articles...')
-        self.fetch_and_store_articles()
+        for category in CATEGORY_KEYWORDS.keys():
+            self.stdout.write(f'Fetching news for category: {category}')
+            self.fetch_and_store_articles(category)
 
-    def fetch_gnews_articles(self):
+    def fetch_gnews_articles(self, category):
+        keywords = ' OR '.join(CATEGORY_KEYWORDS[category])
+        news_query_params = {
+            'q': keywords,  # Dynamic query term based on category
+            'lang': 'en',
+            'country': 'us',
+            'max': 10,
+            'apikey': GNEWS_API_KEY
+        }
         try:
-            response = requests.get(GNEWS_URL, params=NEWS_QUERY_PARAMS)
+            response = requests.get(GNEWS_URL, params=news_query_params)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.HTTPError as err:
@@ -52,13 +55,14 @@ class Command(BaseCommand):
             ]
         )
         return response.choices[0].message['content'].strip()
-
+            
     def categorize_article(self, body_text):
         for category, keywords in CATEGORY_KEYWORDS.items():
             if any(keyword in body_text.lower() for keyword in keywords):
                 return category
-        return 'general'
+        return 'general'  # This should be outside the loop
 
+    
     def is_valid_image_url(self, url):
         try:
             response = requests.head(url)
@@ -79,12 +83,12 @@ class Command(BaseCommand):
             self.stdout.write(f"Article stored: {headline}")
         else:
             self.stdout.write(f"Article already exists: {headline}")
-
-    def fetch_and_store_articles(self):
-        data = self.fetch_gnews_articles()
+            
+    def fetch_and_store_articles(self, category):
+        data = self.fetch_gnews_articles(category)
     
         if data is None:
-            self.stdout.write("No data received from GNews API.")
+            self.stdout.write(f"No data received from GNews API for category: {category}")
             return
         
         articles = data.get('articles', [])
@@ -94,7 +98,6 @@ class Command(BaseCommand):
             body_text = article.get('description', '') or article.get('content', '')
             image_url = article.get('image', '')
             
-            # Validate image URL before storing
             if not self.is_valid_image_url(image_url):
                 image_url = None
             
