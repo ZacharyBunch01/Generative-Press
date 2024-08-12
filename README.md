@@ -3,7 +3,7 @@
 Generative Press - An AI-driven news source
 
 Visit the site here:
-https://generativepost.org
+https://generativepress.org/
 
 This site queries GNew once every hour and generates articles via ChatGPT's API.  Eventually, I plan on querying Perplexity API to verify and adjust for GPT's accuracy and implicit bias.
 
