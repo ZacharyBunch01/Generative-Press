@@ -1,6 +1,8 @@
 import requests
 import openai
 from django.core.management.base import BaseCommand
+from django.core.cache import cache
+from datetime import datetime
 from news.models import Article
 
 # Configuration
@@ -22,6 +24,17 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.stdout.write('Fetching news articles...')
+        last_run_time = cache.get('last_query_time')
+        
+        # Set the current time in the cache as the new last run time
+        current_time = datetime.now()
+        cache.set('last_query_time', current_time, None)  # None means the cache never expires
+
+        # Calculate the difference in minutes if last_run_time exists
+        if last_run_time:
+            time_diff = current_time - last_run_time
+            minutes_since_last_query = time_diff.total_seconds() / 60
+            self.stdout.write(f'Time since last query: {minutes_since_last_query} minutes')
         for category in CATEGORY_KEYWORDS.keys():
             self.stdout.write(f'Fetching news for category: {category}')
             self.fetch_and_store_articles(category)
