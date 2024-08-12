@@ -9,7 +9,7 @@ https://generativepress.org/
 
 This site queries GNew once every hour and generates articles via ChatGPT's API.  Eventually, I plan on querying Perplexity API to verify and adjust for GPT's accuracy and implicit bias.
 
-I have some future features I would like to include, if users find this site valuable, such as a GP API and an AI YT channel that summarizes the aricles using TTS.
+I have some future features I would like to include, if users find this site valuable, such as a GP API and an AI YT channel that summarizes the articles using TTS.
 
 ## Purposes of this project
  * To provide a news source that is accurate.
