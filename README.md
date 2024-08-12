@@ -18,5 +18,5 @@ I have some future features I would like to include, if users find this site val
 
 ## Technologies Used
   * Django
-  * GNews
+  * GNews API
   * ChatGPT API
